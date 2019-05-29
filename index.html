@@ -1,34 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/moon.css">
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/reveal.css" />
+    <link rel="stylesheet" href="css/theme/moon.css" />
 
-		<!-- Theme used for syntax highlighting of code -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/atom-one-dark.min.css" />
+    <!-- Theme used for syntax highlighting of code -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/atom-one-dark.min.css"
+    />
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "css/print/pdf.css"
+        : "css/print/paper.css";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
         <section data-markdown>
           <script type="text/template">
-            ## It's Imperative That You Stop Using Mixins
+            ## It's Imperative That <br>You Stop Using Mixins
             Tim Waite (@twaite)
 
 
@@ -121,7 +128,7 @@
           <script type="text/template">
             ### What is a mixin?
 
-            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, and lifecycle hooks.<br><br>When adding mixins to a component it will inherit all of these properties. <!-- .element class="fragment" -->.
+            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, and lifecycle hooks.<br><br>When adding mixins to a component it will inherit all of these properties. <!-- .element class="fragment" -->
 
             NOTE:
             - One last definition
@@ -129,7 +136,6 @@
             - This is my definition based loosely on the Vue and Ember docs
           </script>
         </section>
-
 
         <section data-markdown>
           <script type="text/template">
@@ -175,32 +181,259 @@
 
         <section data-markdown>
           <script type="text/template">
-            <iframe src="https://codesandbox.io/embed/mixins-jeyby?fontsize=14&module=%2Fsrc%2Fcomponents%2FPrintScheduleModal.vue" title="Mixins" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+            ### But maybe abstraction is a good thing?
+
+            ```javascript
+              const mixins = [
+                acceptSignature,
+                AjaxHelper,
+                Evented,
+                filteredName,
+                isNotSystemYear,
+                makeChartDynamic(),
+                printDraftList,
+                printFinalList,
+                printBubbleSummary,
+                cancelAppointments,
+                cancelAppointment,
+                nameSelector,
+              ];
+
+              const PrintFormComponent = {
+                mixins,
+                // Component implementation
+              }
+
+            ```
+            <!-- .element class="fragment" style="font-size: 1rem !important;"-->
+
+              NOTE:
+              - Sometimes abstraction can be a good thing
+              - Javascript is not statically typed and does not give us feedback
+              - Here's an example adapted from our code
+              - obvi it's bad, stylistically alone, but this is common
+              - We can end up with many name clashes
+              - In fact a teammate spent hours trying to debug an issue from this recently
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            Mixin Code
+            ### What are the real issues?
+
+            - Naming clashes between state and/or methods
+            <!-- .element class="fragment" -->
+            - No editor completion or warnings
+            <!-- .element class="fragment" -->
+            - Testing mixins is really hard
+            <!-- .element class="fragment" -->
+            - These issues are caused by imperative code
+            <!-- .element class="fragment" -->
+
+            NOTE:
+            - Naming clashes cause headaches, ex: Nick
+            - Mixins are typically second class, so the component/controller will always override
+            - Javascript is Dynamic, which is part of why this is so dangerous
+            - Testing can be hard because you have to instantiate a container (creating useless component in testing, just for testing purposes)
+
+            - ! the first two apply to classes in JS as well !
+              - no getters and setters
           </script>
         </section>
-			</div>
-		</div>
 
-		<script src="js/reveal.js"></script>
+        <section data-markdown>
+          <script type="text/template">
+            ### Classes have these issues too
 
-		<script>
-			// More info about config & dependencies:
-			// - https://github.com/hakimel/reveal.js#configuration
-			// - https://github.com/hakimel/reveal.js#dependencies
-			Reveal.initialize({
-				dependencies: [
-					{ src: 'plugin/markdown/marked.js' },
-					{ src: 'plugin/markdown/markdown.js' },
-					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
-				]
-			});
-		</script>
-	</body>
+            ```javascript
+            class Counter {
+              count: 0
+
+              increment() {
+                count = count + 1;
+              }
+            }
+
+            class FancyCounter extends Counter {
+              count: {
+                value: 0,
+                numberOfChanges: 0,
+              }
+            }
+
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Adopt a pet Example
+            <iframe src="https://codesandbox.io/embed/mixins-jeyby?fontsize=14&module=%2Fsrc%2Fcomponents%2FPrintScheduleModal.vue" title="Mixins" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+            NOTE:
+            - Let's look at an example of code that is going to be more reasonable
+            - View the mixins
+              - show mixins in the modal
+              - show mixins in the inputs
+            - There's a lot of obscurity here, but how do we solve the issue?
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Adopt a pet Declaratively
+            <iframe src="https://codesandbox.io/embed/mixins-jeyby?fontsize=14&module=%2Fsrc%2Fcomponents%2FPrintScheduleModal.vue" title="Mixins" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+
+            NOTE:
+            - Let's apply what we just walked through
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Ajax Mixin should be a plain JS module
+
+            // TODO: insert code here
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Modal mixin should be a component
+
+            // TODO: insert code here
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Formatter Mixin could be a plain JS function, or spread
+
+            // TODO: use for selected animals
+            // TODO: rename to array formatter
+            // TODO: insert code here
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### inputs should be one single component with an as prop
+
+            // todo: refactor select to use mixin
+            // todo: insert code here
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### JS should be Declarative when possible
+
+            - Because we don't have type safety we can't know what happened
+            - Even with TypeScript we don't always get valuable feedback
+            - Class inheritance can be just as dangerous as mixins
+            - The spread operator can lead us down the same path as well
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Declarative JavaScript
+
+            - Better developer experience
+            - Less Bugs
+
+            NOTE:
+            - Better editor completion
+            - Don't need to know the details of other files
+            - No risk of naming clashes
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Modern JS frameworks are encouraging declarative code
+
+            - React Hooks
+            - Vue 3's "Composition Functions"
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### React Hooks
+
+            ```javascript
+            import React, { useState } from 'react';
+
+            function Example() {
+              // Declare a new state variable, which we'll call "count"
+              const [count, setCount] = useState(0);
+
+              return (
+                <div>
+                  <p>You clicked {count} times</p>
+                  <button onClick={() => setCount(count + 1)}>
+                    Click me
+                  </button>
+                </div>
+              );
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Vue 3
+
+            ```javascript
+            const App = {
+              setup(props) {
+                const count = value(1)
+
+                const plusOne = computed(() => count.value + 1)
+
+                function inc() {
+                  count.value++
+                }
+
+                return {
+                  count,
+                  plusOne,
+                  inc,
+                };
+              },
+
+              // component definition
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Further Reading and Resources
+
+            // TODO: add links
+          </script>
+        </section>
+      </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        dependencies: [
+          { src: "plugin/markdown/marked.js" },
+          { src: "plugin/markdown/markdown.js" },
+          { src: "plugin/notes/notes.js", async: true },
+          { src: "plugin/highlight/highlight.js", async: true }
+        ]
+      });
+    </script>
+  </body>
 </html>
