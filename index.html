@@ -8,10 +8,10 @@
 
 		<link rel="stylesheet" href="css/reset.css">
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai.min.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -25,8 +25,91 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## The Dangers of Mixins
+            Tim Waite (@twaite)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## What is a mixin?
+
+            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, lifecycle hooks.
+
+            When adding mixins to a component it will inherit all of these properties.
+          </script>
+        </section>
+
+
+        <section data-markdown>
+          <script type="text/template">
+            Mixin Code
+          </script>
+        </section>
+
+        <section >
+          <img src="images/react-blog.png" />
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Imperative
+
+            vs
+
+            ### Declarative
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Roadmap
+
+            - What’s the difference between imperative and declarative?
+            - How are these concepts related to mixins?
+            - What makes mixins dangerous?
+            - Where can we use mixins correctly?
+            - How can I use these concepts with my other code?
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Imperative
+
+            - Creating code that tells the computer how to do things.
+            - Typically uses lots of conditionals, loops and inheritance <!-- .element class="fragment" -->
+            - Example languages: C, C++, Java <!-- .element class="fragment" -->
+
+            <pre class="fragment">
+              <code class="hljs">
+                count = 0;
+                const increment = () => increment++;
+
+                increment();
+
+                console.log(count); // 1
+
+              </pre>
+            </code>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <iframe src="https://codesandbox.io/embed/lyr5q34r4z?fontsize=14" title="Vue Template" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Mixin Code
+          </script>
+        </section>
 			</div>
 		</div>
 
