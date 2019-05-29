@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="css/theme/moon.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/atom-one-dark.min.css" />
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -28,30 +28,26 @@
 
         <section data-markdown>
           <script type="text/template">
-            ## The Dangers of Mixins
+            ## It's Imperative That You Stop Using Mixins
             Tim Waite (@twaite)
+
+
+            NOTE:
+            - UI Engineer at Dialexa
+            - Co-organizer of the Dallas Vue Meetup
+            - The title is a joke you will get soon ;)
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ## What is a mixin?
+            ![React Blog](images/react-blog.png)
 
-            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, lifecycle hooks.
-
-            When adding mixins to a component it will inherit all of these properties.
+            NOTE:
+            - If you use react you've probably seen this article
+            - This article explains some great alternatives, we will look at these
+            - This talk is not about _how_ we can write our code, but rather about _why_ we want to write our code this way
           </script>
-        </section>
-
-
-        <section data-markdown>
-          <script type="text/template">
-            Mixin Code
-          </script>
-        </section>
-
-        <section >
-          <img src="images/react-blog.png" />
         </section>
 
         <section data-markdown>
@@ -61,19 +57,10 @@
             vs
 
             ### Declarative
-          </script>
-        </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ### Roadmap
-
-            - What’s the difference between imperative and declarative?
-            - How are these concepts related to mixins?
-            - What makes mixins dangerous?
-            - Where can we use mixins correctly?
-            - How can I use these concepts with my other code?
-
+            NOTE:
+            - Today's talk is going to be focusing on this distinction, as it is the underlying reason that mixins can become problematic
+            - [Medium article with good defs](https://outline.com/kkyEAp)
           </script>
         </section>
 
@@ -81,27 +68,114 @@
           <script type="text/template">
             ### Imperative
 
-            - Creating code that tells the computer how to do things.
+            - Creating code that tells the computer how to do things. <!-- .element class="fragment" -->
             - Typically uses lots of conditionals, loops and inheritance <!-- .element class="fragment" -->
-            - Example languages: C, C++, Java <!-- .element class="fragment" -->
+            - Example languages: C, C++, Java, Assembly <!-- .element class="fragment" -->
 
-            <pre class="fragment">
-              <code class="hljs">
-                count = 0;
-                const increment = () => increment++;
+            ```javascript
+              let count = 0;
+              const increment = () => count++;
 
-                increment();
+              increment();
 
-                console.log(count); // 1
+              console.log(count); // 1
+            ```
+            <!-- .element class="fragment" -->
 
-              </pre>
-            </code>
+            NOTE:
+            - Telling code _how_ to do things
+            - Uses lots of conditionals, loops and inheratance
+            - C, C++, Java, Assembly
+            - Mutability
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            <iframe src="https://codesandbox.io/embed/lyr5q34r4z?fontsize=14" title="Vue Template" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+            ### Declarative
+
+            - Creating code that tells the computer what to do. <!-- .element class="fragment" -->
+            - Focuses on using expressions instead of statements <!-- .element class="fragment" -->
+            - Example languages: HTML, Haskell, SQL <!-- .element class="fragment" -->
+
+            ```javascript
+              let count = 0;
+
+              const add = (a, b) => a + b;
+
+              count = add(count, 1);
+
+              console.log(count); // 1
+            ```
+            <!-- .element class="fragment" -->
+
+            NOTE:
+            - Focuses on telling the computer _what_ to do
+            - Tends to use expressions rather than statements
+            - HTML, Haskell, SQL
+            - Notice that this function is pure
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### What is a mixin?
+
+            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, and lifecycle hooks.<br><br>When adding mixins to a component it will inherit all of these properties. <!-- .element class="fragment" -->.
+
+            NOTE:
+            - One last definition
+            - What is a mixin?
+            - This is my definition based loosely on the Vue and Ember docs
+          </script>
+        </section>
+
+
+        <section data-markdown>
+          <script type="text/template">
+            ### So are mixins imperative or declarative?
+
+            ```javascript
+              import counterMixin from '@/mixins/counter-mixin.js'
+
+              const MyComponent = {
+                mixins: [counterMixin],
+                // ...
+              }
+            ```
+
+            NOTE:
+            - We will be using Vue as an example, but this code is very similar to Ember or other alternatives
+            - At first this seems to be declarative, after all we aren't telling it what to do
+            - But remember that we are using inheritance, we are telling it _how_, but somewhere else
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Declarative Code is Descriptive
+
+            What is this code actually doing?
+
+            ```javascript
+              import counterMixin from '@/mixins/counter-mixin.js'
+
+              const MyComponent = {
+                mixins: [counterMixin],
+                // ...
+              }
+            ```
+
+            NOTE:
+            - This code is actually imperative
+            - This code does not _declare_ what it's doing, it's very abstract
+            - What methods and state, if any, does this add?
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <iframe src="https://codesandbox.io/embed/mixins-jeyby?fontsize=14&module=%2Fsrc%2Fcomponents%2FPrintScheduleModal.vue" title="Mixins" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
           </script>
         </section>
 
