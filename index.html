@@ -569,6 +569,7 @@
                 </template>
 
                 // Modal Content
+              </Modal>
             </template>
             ```
 
@@ -592,7 +593,7 @@
             ```html
             <template>
               <!-- ... -->
-              <span>{{formattedArray}}
+              <span>{{formattedArray}}</span>
               <!-- ... -->
             </template>
             ```
@@ -614,7 +615,7 @@
             ```html
             <template>
               <!-- ... -->
-              <span>{{formattedArray}}
+              <span>{{formattedArray}}</span>
               <!-- ... -->
             </template>
             ```
@@ -649,35 +650,56 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### JS should be Declarative when possible
+            ### Moving away from Mixins
+
+            - Logic with state
+            <!-- .element class="fragment" -->
+            - Component Composition
+            <!-- .element class="fragment" -->
+            - Direct imports
+            <!-- .element class="fragment" -->
+
+            ```javascript
+            import { increment } from '@/utils/count-functions';
+
+            const component = {
+              data() {
+                return {
+                  count: 0;
+                }
+              }
+              methods: {
+                increment,
+              }
+            }
+            ```
+            <!-- .element class="fragment" -->
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### JavaScript benefits from Declarative <br>Code due to it's nature
 
             - Lack of Type Safety
+            <!-- .element class="fragment" -->
             - TypeScript/Flow don't provide great feedback
-            - JS Classes can obscure code
-            - Spread operator can obsure code
+            <!-- .element class="fragment" -->
+            - JS Classes and the spread operator can obscure code
+            <!-- .element class="fragment" -->
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Declarative JavaScript
+            ### Modern JS frameworks encourage declarative code
 
-            - Better developer experience
-            - Less Bugs
-
-            NOTE:
-            - Better editor completion
-            - Don't need to know the details of other files
-            - No risk of naming clashes
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Modern JS frameworks are encouraging declarative code
-
+            - Render Functions
+            <!-- .element class="fragment" -->
             - React Hooks
+            <!-- .element class="fragment" -->
             - Vue 3's "Composition Functions"
+            <!-- .element class="fragment" -->
           </script>
         </section>
 
@@ -707,14 +729,14 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Vue 3
+            ### vue 3
 
             ```javascript
-            const App = {
+            const app = {
               setup(props) {
                 const count = value(1)
 
-                const plusOne = computed(() => count.value + 1)
+                const plusone = computed(() => count.value + 1)
 
                 function inc() {
                   count.value++
@@ -722,7 +744,7 @@
 
                 return {
                   count,
-                  plusOne,
+                  plusone,
                   inc,
                 };
               },
@@ -735,9 +757,18 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Further Reading and Resources
+            ### It's imperative that you<br> write declarative JS
 
-            // TODO: add links
+            You'll thank yourself later
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Any Questions?
+
+            Code and Slides on GitHub:
+            [https://github.com/twaite/js-mixins-talk](https://github.com/twaite/js-mixins-talk)
           </script>
         </section>
       </div>
