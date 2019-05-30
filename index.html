@@ -191,6 +191,7 @@
                 )
               }
             ```
+            <!-- .element style="font-size: 1.2rem !important" -->
 
             Imperative
             ```javascript
@@ -203,6 +204,7 @@
 
               mount.append(button);
             ```
+            <!-- .element style="font-size: 1.2rem !important" -->
           </script>
         </section>
 
@@ -216,7 +218,7 @@
           <script type="text/template">
             ### What is a mixin?
 
-            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, and lifecycle hooks.<br><br>When adding mixins to a component it will inherit all of these properties. <!-- .element class="fragment" -->
+            Mixins are a way to distribute reusable functionality for components. A mixin typically contains component options such as state, props, methods and lifecycle hooks.<br><br>When adding mixins to a component it will inherit all of these properties. <!-- .element class="fragment" -->
 
             NOTE:
             - One last definition
@@ -244,12 +246,7 @@
               }
             }
             ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ### Creating a Mixin
+            <!-- .element style="font-size: 1.2rem !important" -->
 
             ```javascript
             import counterMixin from '@/mixins/counter-mixin.js';
@@ -263,6 +260,7 @@
               }
             }
             ```
+            <!-- .element style="font-size: 1.2rem !important" -->
           </script>
         </section>
 
@@ -641,10 +639,60 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### inputs should be one single component with an as prop
+            ### Two inputs could become one dynamic component
 
-            // todo: refactor select to use mixin
-            // todo: insert code here
+            There are currently two different components using the input mixin.
+
+            ```html
+            <template>
+              <div class="flex flex-col">
+                <label>{{label}}</label>
+                <input v-bind="$attrs" :value="value" @input="handleInput"/>
+                <div class="text-red-600">{{error}}</div>
+              </div>
+            </template>
+            ```
+            ```javascript
+              import inputMixin from '@/mixins/input';
+
+              const Input = {
+                mixins: [input],
+              };
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Two inputs could become one dynamic component
+
+            ```html
+            <template>
+              <div class="flex flex-col">
+                <label>{{label}}</label>
+                <component
+                  :is="as"
+                  :value="value"
+                  v-bind="$attrs"
+                  @input="handleInput"/>
+                  <slot></slot>
+                </component>
+                <div class="text-red-600">{{error}}</div>
+              </div>
+            </template>
+            ```
+            <!-- .element style="font-size: 1.1rem !important" -->
+            ```javascript
+              const Input = {
+                props: ['as', 'value'],
+                methods: {
+                  handleInput(event) {
+                    this.$emit('input', event.target.value);
+                  }
+                }
+              };
+            ```
+            <!-- .element style="font-size: 1.1rem !important" -->
           </script>
         </section>
 
@@ -752,12 +800,13 @@
               // component definition
             }
             ```
+            <!-- .element style="font-size: .1rem !important" -->
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### It's imperative that you<br> write declarative JS
+            ### It's imperative that you<br> write declarative JavaScript
 
             You'll thank yourself later
           </script>
