@@ -88,7 +88,7 @@
           <script type="text/template">
             ### Imperative
 
-            - Describes _how_ to do things. <!-- .element class="fragment" -->
+            - Describes how to do things. <!-- .element class="fragment" -->
             - Typically uses lots of conditionals, loops and inheritance <!-- .element class="fragment" -->
             - Example languages: C, C++, Java, Assembly <!-- .element class="fragment" -->
 
@@ -144,7 +144,7 @@
           <script type="text/template">
             ### Declarative
 
-            - Describes _what_ to do. <!-- .element class="fragment" -->
+            - Describes what to do. <!-- .element class="fragment" -->
             - Expressions instead of Statements <!-- .element class="fragment" -->
             - Example languages: HTML, Haskell, SQL <!-- .element class="fragment" -->
 
@@ -256,7 +256,6 @@
 
             const myComponent = {
               mixins: [counterMixin],
-              // ...
               methods: {
                 decrement() {
                   this.count = this.count - 1;
@@ -462,7 +461,7 @@
         <section data-markdown>
           <script type="text/template">
             ### Adopt a pet Example
-            <iframe src="https://codesandbox.io/embed/mixins-jeyby?fontsize=14&module=%2Fsrc%2Fcomponents%2FPrintScheduleModal.vue" title="Mixins" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+            <iframe src="https://codesandbox.io/embed/mixins-v2-mjddr?fontsize=14&module=%2Fsrc%2Fcomponents%2FSearchModal.vue" title="Mixins v2" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
             NOTE:
             - Let's look at an example of code that is going to be more reasonable
@@ -476,7 +475,7 @@
         <section data-markdown>
           <script type="text/template">
             ### Adopt a pet Declaratively
-            <iframe src="https://codesandbox.io/embed/mixins-jeyby?fontsize=14&module=%2Fsrc%2Fcomponents%2FPrintScheduleModal.vue" title="Mixins" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
+            <iframe src="https://codesandbox.io/embed/mixins-declarative-n33lq?fontsize=14" title="Mixins Declarative" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
 
             NOTE:
             - Let's apply what we just walked through
@@ -487,7 +486,48 @@
           <script type="text/template">
             ### Ajax Mixin should be a plain JS module
 
-            // TODO: insert code here
+            ```javascript
+            import ajaxMixin from '@/mixins/ajax.js';
+
+            const myComponent = {
+              mixins: [ajaxMixin],
+
+              // Uses the get function that isn't declared anywhere
+              async created() {
+                const response = await this.get(/* some url */);
+                this.breeds = response.data;
+              },
+
+              data() {
+                return {
+                  breeds: [],
+                };
+              }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Ajax Mixin should be a plain JS module
+
+            ```javascript
+            import { get } from '@/utils/http.js';
+
+            const myComponent = {
+              async created() {
+                const response = await get(/* some url */);
+                this.breeds = response.data;
+              },
+
+              data() {
+                return {
+                  breeds: [],
+                };
+              }
+            }
+            ```
           </script>
         </section>
 
@@ -495,17 +535,106 @@
           <script type="text/template">
             ### Modal mixin should be a component
 
-            // TODO: insert code here
+            ```html
+            <template>
+              <button @click="open">Open</button>
+
+              <!-- this logic gets duplicated every time we need a modal -->
+              <div v-if="show">
+                // Modal content
+              </div>
+            </template>
+            ```
+
+            ```javascript
+            import modalMixin from '@/mixins/modal.js';
+
+            const MyModal = {
+              mixins: [modalMixin],
+              // ...
+            }
+            ```
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ### Formatter Mixin could be a plain JS function, or spread
+            ### Modal mixin should be a component
 
-            // TODO: use for selected animals
-            // TODO: rename to array formatter
-            // TODO: insert code here
+            ```html
+            <template>
+              <Modal>
+                <template v-slot:trigger="{ open }"
+                  <button @click="open">Open</button>
+                </template>
+
+                // Modal Content
+            </template>
+            ```
+
+            ```javascript
+            import Modal from '@/components/modal';
+
+            const MyModal = {
+              components: {
+                Modal,
+              },
+              // ...
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Formatter Mixin could be a plain JS function
+
+            ```html
+            <template>
+              <!-- ... -->
+              <span>{{formattedArray}}
+              <!-- ... -->
+            </template>
+            ```
+
+            ```javascript
+            import formatterMixin from '@/mixins/formatter';
+
+            const myComponent = {
+              mixins: [formatterMixin],
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Formatter Mixin could be a plain JS function
+
+            ```html
+            <template>
+              <!-- ... -->
+              <span>{{formattedArray}}
+              <!-- ... -->
+            </template>
+            ```
+
+            ```javascript
+            import { arrayFormatter } from '@/utils/formatters';
+
+            const myComponent = {
+              data() {
+                return {
+                  myArray: []
+                };
+              }
+              computed: {
+                formattedArray() {
+                  return arrayFormatter(this.myArray);
+                }
+              }
+            }
+            ```
           </script>
         </section>
 
@@ -522,10 +651,10 @@
           <script type="text/template">
             ### JS should be Declarative when possible
 
-            - Because we don't have type safety we can't know what happened
-            - Even with TypeScript we don't always get valuable feedback
-            - Class inheritance can be just as dangerous as mixins
-            - The spread operator can lead us down the same path as well
+            - Lack of Type Safety
+            - TypeScript/Flow don't provide great feedback
+            - JS Classes can obscure code
+            - Spread operator can obsure code
           </script>
         </section>
 
