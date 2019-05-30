@@ -40,7 +40,7 @@
 
 
             NOTE:
-            - UI Engineer at Dialexa
+            - Senior Associate @ Dialexa who focuses on UI engineering
             - Co-organizer of the Dallas Vue Meetup
             - The title is a joke you will get soon ;)
           </script>
@@ -73,9 +73,22 @@
 
         <section data-markdown>
           <script type="text/template">
+            ### Agenda
+
+            - Imperative vs Declarative
+            - Defining Mixins
+            - The Issue with Mixins
+            - Other JS Code with the Same Issues
+            - Code Example: Fixing Mixins
+            - Applying It All
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             ### Imperative
 
-            - Creating code that tells the computer how to do things. <!-- .element class="fragment" -->
+            - Describes _how_ to do things. <!-- .element class="fragment" -->
             - Typically uses lots of conditionals, loops and inheritance <!-- .element class="fragment" -->
             - Example languages: C, C++, Java, Assembly <!-- .element class="fragment" -->
 
@@ -101,6 +114,12 @@
                 return result;
               }
             ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Examples of Imperative Code
 
             Java
             ```java
@@ -125,8 +144,8 @@
           <script type="text/template">
             ### Declarative
 
-            - Creating code that tells the computer what to do. <!-- .element class="fragment" -->
-            - Focuses on using expressions instead of statements <!-- .element class="fragment" -->
+            - Describes _what_ to do. <!-- .element class="fragment" -->
+            - Expressions instead of Statements <!-- .element class="fragment" -->
             - Example languages: HTML, Haskell, SQL <!-- .element class="fragment" -->
 
             NOTE:
@@ -139,11 +158,11 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Examples of Imperative Code
+            ### Examples of Declarative Code
 
             JavaScript
             ```javascript
-              const sumOfArray = arr.reduce((a, b) => a + b);
+              const sumOfArray = arr.reduce((a, b) => a + b, 0);
             ```
 
             SQL
@@ -160,20 +179,20 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Imperative vs Declarative JS
+            ### JavaScript Example
 
-            declarative
+            Declarative
             ```javascript
               function myButton(props) {
                 return (
-                  <button class="btn" onClick={props.clicked()}>
+                  <button class="btn" onClick={props.clicked}>
                     {props.buttonText}
                   </button>
                 )
               }
             ```
 
-            imperative
+            Imperative
             ```javascript
               const mount = document.querySelector('#myButtonMount');
 
@@ -208,13 +227,55 @@
 
         <section data-markdown>
           <script type="text/template">
+            ### Creating a Mixin
+
+            ```javascript
+            const counterMixin = {
+              // Initial State
+              data() {
+                return {
+                  count: 0;
+                };
+              },
+              methods: {
+                increment() {
+                  this.count = this.count + 1;
+                }
+              }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Creating a Mixin
+
+            ```javascript
+            import counterMixin from '@/mixins/counter-mixin.js';
+
+            const myComponent = {
+              mixins: [counterMixin],
+              // ...
+              methods: {
+                decrement() {
+                  this.count = this.count - 1;
+                }
+              }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             ### So are mixins imperative or declarative?
 
             ```javascript
-              import counterMixin from '@/mixins/counter-mixin.js'
+              import formMixin from '@/mixins/form-mixin.js'
 
               const MyComponent = {
-                mixins: [counterMixin],
+                mixins: [formMixin],
                 // ...
               }
             ```
@@ -233,10 +294,10 @@
             What is this code actually doing?
 
             ```javascript
-              import counterMixin from '@/mixins/counter-mixin.js'
+              import formMixin from '@/mixins/form-mixin.js'
 
               const MyComponent = {
-                mixins: [counterMixin],
+                mixins: [formMixin],
                 // ...
               }
             ```
@@ -286,17 +347,51 @@
           </script>
         </section>
 
-        <section data-markdown>
+        <section data-markdown data-transition="slide-in none-out">
           <script type="text/template">
             ### What are the real issues?
 
             - Naming clashes between state and/or methods
-            <!-- .element class="fragment" -->
+
+            ```javascript
+            const counterMixin = {
+              data() {
+                return {
+                  count: 0,
+                };
+              },
+            };
+
+            const myComponent = {
+              mixins: [counterMixin],
+              data() {
+                return {
+                  count: 10,
+                };
+              },
+              // ...
+            };
+            ```
+
+            NOTE:
+            - Naming clashes cause headaches, ex: Nick
+            - Mixins are typically second class, so the component/controller will always override
+            - Javascript is Dynamic, which is part of why this is so dangerous
+            - Testing can be hard because you have to instantiate a container (creating useless component in testing, just for testing purposes)
+
+            - ! the first two apply to classes in JS as well !
+              - no getters and setters
+          </script>
+        </section>
+
+        <section data-markdown data-transition="none-in slide-out">
+          <script type="text/template">
+            ### What are the real issues?
+
+            - Naming clashes between state and/or methods
             - No editor completion or warnings
             <!-- .element class="fragment" -->
             - Testing mixins is really hard
-            <!-- .element class="fragment" -->
-            - These issues are caused by imperative code
             <!-- .element class="fragment" -->
 
             NOTE:
@@ -312,7 +407,7 @@
 
         <section data-markdown>
           <script type="text/template">
-            ### Classes have these issues too
+            ### What about the rest of JS?
 
             ```javascript
             class Counter {
@@ -331,6 +426,36 @@
             }
 
             ```
+            <!-- .element class="fragment" -->
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### What about the rest of JS?
+
+            ```javascript
+            export const countMethods = {
+              increment() {
+                count = count + 1;
+              },
+              decrement() {
+                count = count - 1;
+              }
+            }
+            ```
+
+            ```
+            import { countMethods } from '@/utils/count-methods.js';
+
+            const myComponent = {
+              // ...
+              methods: {
+                ...countMethods,
+              }
+            }
+            ```
+            <!-- .element class="fragment" -->
           </script>
         </section>
 
