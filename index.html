@@ -79,21 +79,45 @@
             - Typically uses lots of conditionals, loops and inheritance <!-- .element class="fragment" -->
             - Example languages: C, C++, Java, Assembly <!-- .element class="fragment" -->
 
-            ```javascript
-              let count = 0;
-              const increment = () => count++;
-
-              increment();
-
-              console.log(count); // 1
-            ```
-            <!-- .element class="fragment" -->
-
             NOTE:
             - Telling code _how_ to do things
             - Uses lots of conditionals, loops and inheratance
             - C, C++, Java, Assembly
             - Mutability
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Examples of Imperative Code
+
+            JavaScript
+            ```javascript
+              function add(arr) {
+                let result = 0;
+                for (let i = 0; i < arr.length; i++) {
+                  result += arr[i];
+                }
+                return result;
+              }
+            ```
+
+            Java
+            ```java
+            public static int[] doSelectionSort(int[] arr) {
+              for (int i = 0; i < arr.length - 1; i++) {
+                int index = i;
+                for (int j = i + 1; j < arr.length; j++) {
+                  if (arr[j] < arr[index]) index = j;
+                }
+
+                int smallerNumber = arr[index];
+                arr[index] = arr[i];
+                arr[i] = smallerNumber;
+              }
+              return arr;
+            }
+            ```
           </script>
         </section>
 
@@ -105,22 +129,67 @@
             - Focuses on using expressions instead of statements <!-- .element class="fragment" -->
             - Example languages: HTML, Haskell, SQL <!-- .element class="fragment" -->
 
-            ```javascript
-              let count = 0;
-
-              const add = (a, b) => a + b;
-
-              count = add(count, 1);
-
-              console.log(count); // 1
-            ```
-            <!-- .element class="fragment" -->
-
             NOTE:
             - Focuses on telling the computer _what_ to do
             - Tends to use expressions rather than statements
             - HTML, Haskell, SQL
             - Notice that this function is pure
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Examples of Imperative Code
+
+            JavaScript
+            ```javascript
+              const sumOfArray = arr.reduce((a, b) => a + b);
+            ```
+
+            SQL
+            ```SQL
+              select * from Dogs;
+            ```
+
+            HTML
+            ```html
+              <img src="/assets/cute-dog.png" alt="Cute dog" />
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ### Imperative vs Declarative JS
+
+            declarative
+            ```javascript
+              function myButton(props) {
+                return (
+                  <button class="btn" onClick={props.clicked()}>
+                    {props.buttonText}
+                  </button>
+                )
+              }
+            ```
+
+            imperative
+            ```javascript
+              const mount = document.querySelector('#myButtonMount');
+
+              const button = document.createElement('button');
+              button.classList.add('btn');
+              button.innerText = buttonText;
+              button.addEventListener('click', clicked);
+
+              mount.append(button);
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            >Declarative code focuses on the result, while imperative code focuses on how to get there.
           </script>
         </section>
 
